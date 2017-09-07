@@ -1,0 +1,6 @@
+apiVersion: github.k8s.io/v1
+kind: Comment
+metadata:
+  name: example-comment
+spec:
+  message: "Hi! This comment is created from a custom resource."
