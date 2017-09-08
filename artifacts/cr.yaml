@@ -3,4 +3,4 @@ kind: Comment
 metadata:
   name: example-comment
 spec:
-  message: "Hi! This comment is created from a custom resource."
+  message: "Hi! This meetup is awesome!"

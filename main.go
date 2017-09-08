@@ -122,27 +122,27 @@ func main() {
 // has already been created, and if not will send it and update the resource
 // accordingly. This method is called whenever this controller starts, and
 // whenever the resource changes, and also periodically every resyncPeriod.
-func sync(notif *v1.Comment) error {
+func sync(comment *v1.Comment) error {
 	// If the comment has already been created, we exit with no error
-	if notif.Status.Created {
-		log.Printf("Skipping already Sent alert '%s/%s'", notif.Namespace, notif.Name)
+	if comment.Status.Created {
+		log.Printf("Skipping already Sent alert '%s/%s'", comment.Namespace, comment.Name)
 		return nil
 	}
 
 	// send the comment now
-	if err := sendComment(ctx, githubClient, notif.Spec.Message); err != nil {
+	if err := sendComment(ctx, githubClient, comment.Spec.Message); err != nil {
 		return err
 	}
 
 	log.Printf("Sent github comment!")
-	log.Printf(notif.Spec.Message)
+	log.Printf(comment.Spec.Message)
 
 	// mark it as created
-	notif.Status.Created = true
-	if _, err := cl.GithubV1().Comments(notif.Namespace).Update(notif); err != nil {
+	comment.Status.Created = true
+	if _, err := cl.GithubV1().Comments(comment.Namespace).Update(comment); err != nil {
 		return fmt.Errorf("error saving update to Comment resource: %s", err.Error())
 	}
-	log.Printf("Finished saving update to Comment resource '%s/%s'", notif.Namespace, notif.Name)
+	log.Printf("Finished saving update to Comment resource '%s/%s'", comment.Namespace, comment.Name)
 
 	// we didn't encounter any errors, so we return nil to allow the callee
 	// to 'forget' this item from the queue altogether.
@@ -231,7 +231,7 @@ func sendComment(ctx context.Context, client *github.Client, message string) err
 	comment := &github.IssueComment{
 		Body: &message,
 	}
-	_, _, err := client.Issues.CreateComment(ctx, "nikhita", "kube-custom-controller", 1, comment)
+	_, _, err := client.Issues.CreateComment(ctx, "nikhita", "kube-custom-controller", 2, comment)
 	if err != nil {
 		return err
 	}

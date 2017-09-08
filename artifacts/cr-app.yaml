@@ -1,0 +1,6 @@
+apiVersion: mygroup.example.com/v1
+kind: App
+metadata:
+  name: example-app
+spec:
+  message: "This meetup is awesome!"
